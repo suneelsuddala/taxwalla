@@ -3,7 +3,7 @@ services:
     name: taxwalla-api
     runtime: node
     rootDir: backend
-    buildCommand: npm ci --omit=dev
+    buildCommand: npm install --omit=dev
     startCommand: npm start
     healthCheckPath: /health
     autoDeploy: false
