@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Taxwalla GST</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="authScreen" class="auth-screen">
+      <div class="auth-card">
+        <div class="brand auth-brand">
+          <div class="brand-mark">L</div>
+          <div>
+            <h1>Taxwalla</h1>
+            <small>Secure GST workspace</small>
+          </div>
+        </div>
+        <div id="authLoginStep">
+          <p class="eyebrow">Welcome back</p>
+          <h2>Sign in securely</h2>
+          <p class="auth-copy">Use the local account created for this Taxwalla workspace.</p>
+          <label>
+            <span>Username</span>
+            <input id="loginUsernameInput" type="text" autocomplete="username" maxlength="32" placeholder="Your username" />
+          </label>
+          <label>
+            <span>Password</span>
+            <input id="loginPasswordInput" type="password" autocomplete="current-password" placeholder="Your password" />
+          </label>
+          <button id="loginButton" class="primary-btn full-width">Sign in</button>
+          <div class="auth-links">
+            <button id="showSetupButton" class="text-btn">Create account</button>
+            <button id="showRecoveryButton" class="text-btn">Forgot username or password?</button>
+          </div>
+        </div>
+        <div id="authSetupStep" class="hidden">
+          <p class="eyebrow">First-time setup</p>
+          <h2>Create your account</h2>
+          <p class="auth-copy">Choose a unique username and password for this browser.</p>
+          <label>
+            <span>Username</span>
+            <input id="setupUsernameInput" type="text" autocomplete="username" maxlength="32" placeholder="Choose a username" />
+          </label>
+          <label>
+            <span>Password</span>
+            <input id="setupPasswordInput" type="password" autocomplete="new-password" placeholder="At least 8 characters" />
+          </label>
+          <label>
+            <span>Confirm password</span>
+            <input id="setupConfirmPasswordInput" type="password" autocomplete="new-password" placeholder="Repeat your password" />
+          </label>
+          <button id="createAccountButton" class="primary-btn full-width">Create account</button>
+          <button id="backToLoginButton" class="text-btn">Back to sign in</button>
+        </div>
+        <div id="authRecoveryStep" class="hidden">
+          <p class="eyebrow">Account recovery</p>
+          <h2>Recover your account</h2>
+          <p class="auth-copy">Confirm the business phone and email saved in Business settings, then choose a new password.</p>
+          <label>
+            <span>Business phone</span>
+            <input id="recoveryPhoneInput" type="tel" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number" />
+          </label>
+          <label>
+            <span>Business email</span>
+            <input id="recoveryEmailInput" type="email" autocomplete="email" placeholder="Business email" />
+          </label>
+          <label>
+            <span>New password</span>
+            <input id="recoveryPasswordInput" type="password" autocomplete="new-password" placeholder="At least 8 characters" />
+          </label>
+          <button id="recoverAccountButton" class="primary-btn full-width">Reset password</button>
+          <button id="backFromRecoveryButton" class="text-btn">Back to sign in</button>
+        </div>
+        <p id="authError" class="auth-error" role="alert"></p>
+      </div>
+    </div>
+
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">L</div>
+          <div>
+            <h1>Taxwalla</h1>
+            <small>GST workspace</small>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <button class="nav-btn active" data-view="homeView">Home</button>
+          <button class="nav-btn" data-view="dashboardView">Dashboard</button>
+          <p class="nav-label">Sales & finance</p>
+          <button class="nav-btn" data-view="billingView">Sales invoices</button>
+          <button class="nav-btn" data-view="customersView">Customers</button>
+          <button class="nav-btn module-btn" data-module="payments">Payments & collections</button>
+          <button class="nav-btn module-btn" data-module="expenses">Expenses</button>
+          <button class="nav-btn" data-view="reportsView">Reports</button>
+          <p class="nav-label">Catalog & compliance</p>
+          <button class="nav-btn" data-view="productsView">Products & stock</button>
+          <button class="nav-btn module-btn" data-module="purchases">Purchase bills</button>
+          <button class="nav-btn module-btn" data-module="gst">GST center</button>
+          <button class="nav-btn module-btn" data-module="einvoice">E-invoice</button>
+          <button class="nav-btn module-btn" data-module="eway">E-way bill</button>
+          <button class="nav-btn module-btn" data-module="returns">Returns & credit notes</button>
+          <button class="nav-btn module-btn" data-module="documents">Documents & exports</button>
+          <p class="nav-label">Administration</p>
+          <button class="nav-btn module-btn" data-module="team">Team & permissions</button>
+          <button class="nav-btn" data-view="settingsView">Business settings</button>
+          <button id="logoutButton" class="nav-btn logout-btn">Sign out</button>
+        </nav>
+        <div class="user-chip">
+          <span class="user-avatar">U</span>
+          <span><strong id="signedInUsername">Preview user</strong><small>Owner access</small></span>
+        </div>
+      </aside>
+
+      <main class="content">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Business overview</p>
+            <h2 id="businessNameHeader">SVDF GST</h2>
+          </div>
+          <button id="newInvoiceButton" class="primary-btn">+ New invoice</button>
+        </header>
+
+        <section id="homeView" class="view active">
+          <div class="marketing-nav">
+            <div class="marketing-brand">
+              <span class="marketing-brand-mark">L</span>
+              <strong>Taxwalla</strong>
+            </div>
+            <nav class="marketing-links" aria-label="Product navigation">
+              <button data-open-workspace="dashboardView">Overview</button>
+              <button data-open-workspace="billingView">GST Billing</button>
+              <button data-open-workspace="productsView">Inventory</button>
+              <button data-open-workspace="moduleView" data-quick-module="gst">GST Center</button>
+            </nav>
+            <button class="marketing-cta" data-open-workspace="billingView">Get started <span>↗</span></button>
+          </div>
+          <div class="hero-panel">
+            <div class="hero-copy">
+              <span class="pill">India-ready business operations</span>
+              <h3>Build a better business with effortless GST control.</h3>
+              <p>Invoice faster, move stock confidently and keep every tax-ready detail beautifully organized in one premium workspace.</p>
+              <div class="hero-actions">
+                <button class="primary-btn" data-open-workspace="billingView">Create your first invoice</button>
+                <button class="secondary-btn" data-open-workspace="dashboardView">Explore workspace</button>
+              </div>
+              <div class="hero-proof"><span>✓</span> GST and non-GST billing <span>✓</span> Live stock visibility</div>
+            </div>
+            <div class="hero-visual">
+              <div class="mini-dashboard">
+                <div class="mini-header">
+                  <span class="dot red"></span>
+                  <span class="dot amber"></span>
+                  <span class="dot green"></span>
+                </div>
+                <div class="mini-charts">
+                  <div class="bars">
+                    <span style="height: 42%"></span>
+                    <span style="height: 58%"></span>
+                    <span style="height: 76%"></span>
+                    <span style="height: 63%"></span>
+                    <span style="height: 98%"></span>
+                  </div>
+                  <div class="ring-wrap">
+                    <div class="ring"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="trust-bar">
+            <span>2,500+ businesses</span>
+            <span>GST ready</span>
+            <span>Offline friendly</span>
+            <span>Fast invoicing</span>
+          </div>
+
+          <section class="promotion-banner" aria-label="Taxwalla promotions">
+            <div class="promotion-glow"></div>
+            <div class="promotion-copy">
+              <span class="promotion-label">Taxwalla launch offer</span>
+              <h4>Turn every invoice into a growth moment.</h4>
+              <p>Launch your GST workspace with faster billing, live stock visibility and cleaner customer follow-ups.</p>
+              <div class="promotion-actions">
+                <button class="primary-btn" data-open-workspace="billingView">Create your first invoice</button>
+                <span class="promotion-note">Built for SVDF GST</span>
+              </div>
+            </div>
+            <div class="promotion-orbit" aria-hidden="true">
+              <span class="orbit-ring ring-one"></span>
+              <span class="orbit-ring ring-two"></span>
+              <span class="orbit-dot dot-one"></span>
+              <span class="orbit-dot dot-two"></span>
+              <div class="promotion-badge">
+                <strong>GST</strong>
+                <span>ready</span>
+              </div>
+            </div>
+            <div class="actor-stage" aria-label="Illustrated Taxwalla business owners">
+              <div class="hero-actor hero-actor-one">
+                <div class="actor-hair"></div>
+                <div class="actor-face"><i></i><i></i><b></b></div>
+                <div class="actor-body"></div>
+              </div>
+              <div class="hero-actor hero-actor-two">
+                <div class="actor-hair"></div>
+                <div class="actor-face"><i></i><i></i><b></b></div>
+                <div class="actor-body"></div>
+              </div>
+              <div class="hero-actor hero-actor-three">
+                <div class="actor-hair"></div>
+                <div class="actor-face"><i></i><i></i><b></b></div>
+                <div class="actor-body"></div>
+              </div>
+              <span class="actor-stage-label">Business owners, moving forward</span>
+            </div>
+          </section>
+
+          <section class="campaign-showcase" aria-label="Product highlights">
+            <div class="section-heading campaign-heading">
+              <div>
+                <p class="eyebrow">Built for your next big day</p>
+                <h4>One beautiful workspace. Every business moment.</h4>
+              </div>
+              <span class="campaign-caption">Premium tools for SVDF GST</span>
+            </div>
+            <div class="campaign-grid">
+              <article class="campaign-card campaign-invoice">
+                <div class="campaign-card-copy">
+                  <span class="campaign-kicker">01 / Bill faster</span>
+                  <h5>Invoices that feel effortless.</h5>
+                  <p>GST, non-GST, quotations and payment status in one polished flow.</p>
+                  <button class="campaign-link" data-open-workspace="billingView">Open billing <span>↗</span></button>
+                </div>
+                <div class="product-art invoice-art" aria-hidden="true">
+                  <div class="invoice-sheet">
+                    <div class="sheet-top"><span>SVDF GST</span><i></i></div>
+                    <div class="sheet-title"></div>
+                    <div class="sheet-line wide"></div>
+                    <div class="sheet-line"></div>
+                    <div class="sheet-row"><b></b><b></b><b></b></div>
+                    <div class="sheet-total"><span></span><strong></strong></div>
+                  </div>
+                  <span class="art-chip">GST ready</span>
+                </div>
+              </article>
+              <article class="campaign-card campaign-stock">
+                <div class="campaign-card-copy">
+                  <span class="campaign-kicker">02 / Stay in control</span>
+                  <h5>Stock clarity, at a glance.</h5>
+                  <p>Know what is moving, what is low and what deserves your attention.</p>
+                  <button class="campaign-link" data-open-workspace="productsView">View inventory <span>↗</span></button>
+                </div>
+                <div class="product-art stock-art" aria-hidden="true">
+                  <div class="stock-orb"></div>
+                  <div class="stock-bars"><i></i><i></i><i></i><i></i><i></i></div>
+                  <span class="art-chip">Live stock</span>
+                </div>
+              </article>
+              <article class="campaign-card campaign-mobile">
+                <div class="campaign-card-copy">
+                  <span class="campaign-kicker">03 / Look premium</span>
+                  <h5>Your business, always ready.</h5>
+                  <p>Present a cleaner brand with dashboards designed for confident decisions.</p>
+                  <button class="campaign-link" data-open-workspace="dashboardView">See dashboard <span>↗</span></button>
+                </div>
+                <div class="product-art mobile-art" aria-hidden="true">
+                  <div class="phone-frame">
+                    <div class="phone-notch"></div>
+                    <div class="phone-total">₹48,920</div>
+                    <div class="phone-spark"><i></i><i></i><i></i><i></i><i></i></div>
+                    <div class="phone-pill"></div>
+                  </div>
+                  <span class="art-chip">Insights</span>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="people-showcase" aria-label="Business stories">
+            <div class="section-heading campaign-heading">
+              <div>
+                <p class="eyebrow">Made for ambitious teams</p>
+                <h4>Clear numbers. Confident people.</h4>
+              </div>
+              <span class="campaign-caption">Original Taxwalla stories</span>
+            </div>
+            <div class="people-grid">
+              <article class="story-card">
+                <div class="portrait portrait-one" aria-hidden="true"><span class="portrait-hair"></span><span class="portrait-face"></span><span class="portrait-shirt"></span></div>
+                <div class="story-content"><span class="story-role">Retail owner</span><h5>“I can see today’s business in one calm view.”</h5><p>Billing, collections and stock without the spreadsheet shuffle.</p><strong>Priya · Bengaluru</strong></div>
+              </article>
+              <article class="story-card">
+                <div class="portrait portrait-two" aria-hidden="true"><span class="portrait-hair"></span><span class="portrait-face"></span><span class="portrait-shirt"></span></div>
+                <div class="story-content"><span class="story-role">Service founder</span><h5>“Every invoice looks as professional as our work.”</h5><p>A polished customer experience from quote to payment.</p><strong>Arjun · Hyderabad</strong></div>
+              </article>
+              <article class="story-card">
+                <div class="portrait portrait-three" aria-hidden="true"><span class="portrait-hair"></span><span class="portrait-face"></span><span class="portrait-shirt"></span></div>
+                <div class="story-content"><span class="story-role">Finance lead</span><h5>“GST-ready reports arrive before I need them.”</h5><p>Cleaner records and fewer last-minute compliance scrambles.</p><strong>Meera · Chennai</strong></div>
+              </article>
+            </div>
+          </section>
+
+          <section class="insights-showcase" aria-label="GST insights">
+            <div class="section-heading campaign-heading">
+              <div>
+                <p class="eyebrow">The Taxwalla journal</p>
+                <h4>Popular GST insights, made practical.</h4>
+              </div>
+              <span class="insight-live"><i></i> Fresh guidance</span>
+            </div>
+            <div class="insights-grid">
+              <article class="insight-card insight-primary"><span class="insight-number">01</span><span class="insight-topic">GST basics</span><h5>Tax invoices without the confusion.</h5><p>Understand the essential fields, supply details and tax treatment before you press save.</p><button class="insight-link" data-open-workspace="billingView">Explore billing guide ↗</button></article>
+              <article class="insight-card"><span class="insight-number">02</span><span class="insight-topic">Cash flow</span><h5>Turn unpaid invoices into visibility.</h5><p>Use due dates, balances and payment records to protect your working capital.</p><button class="insight-link" data-open-workspace="reportsView">Open reports ↗</button></article>
+              <article class="insight-card"><span class="insight-number">03</span><span class="insight-topic">Inventory</span><h5>Know what your stock is telling you.</h5><p>Spot low-stock risks early and keep every sale connected to the real quantity.</p><button class="insight-link" data-open-workspace="productsView">Check stock ↗</button></article>
+            </div>
+          </section>
+
+          <div class="promo-grid" id="promoCards"></div>
+
+          <div class="feature-showcase">
+            <div class="section-heading">
+              <p class="eyebrow">Why teams choose Taxwalla</p>
+              <h4>Everything your business needs to manage finance with clarity.</h4>
+            </div>
+            <div class="feature-grid" id="featureCards"></div>
+          </div>
+
+          <div class="plan-grid">
+            <article class="plan-card featured">
+              <span class="plan-badge">Most popular</span>
+              <h5>Growth</h5>
+              <div class="price">₹799<span>/month</span></div>
+              <ul>
+                <li>Unlimited invoices</li>
+                <li>Inventory tracking</li>
+                <li>GST reports</li>
+                <li>WhatsApp sharing</li>
+              </ul>
+              <button class="primary-btn full-width">Start free</button>
+            </article>
+            <article class="plan-card">
+              <h5>Starter</h5>
+              <div class="price">₹299<span>/month</span></div>
+              <ul>
+                <li>Simple billing</li>
+                <li>Stock visibility</li>
+                <li>Basic reporting</li>
+              </ul>
+              <button class="secondary-btn full-width">Try demo</button>
+            </article>
+            <article class="plan-card">
+              <h5>Enterprise</h5>
+              <div class="price">Custom</div>
+              <ul>
+                <li>Multi-user access</li>
+                <li>Audit history</li>
+                <li>Compliance workflows</li>
+              </ul>
+              <button class="secondary-btn full-width">Book demo</button>
+            </article>
+          </div>
+        </section>
+
+        <section id="dashboardView" class="view">
+          <div class="stats-grid">
+            <article class="stat-card accent-blue">
+              <span>Sales today</span>
+              <strong id="salesToday">₹ 0.00</strong>
+            </article>
+            <article class="stat-card accent-green">
+              <span>Receivables</span>
+              <strong id="receivables">₹ 0.00</strong>
+            </article>
+            <article class="stat-card accent-gold">
+              <span>Stock value</span>
+              <strong id="stockValue">₹ 0.00</strong>
+            </article>
+            <article class="stat-card accent-mint">
+              <span>GST collected</span>
+              <strong id="gstCollected">₹ 0.00</strong>
+            </article>
+          </div>
+
+          <section class="quick-actions-panel panel">
+            <div class="panel-header space-between">
+              <div>
+                <p class="eyebrow">Shortcuts</p>
+                <h3>Run your day from one place</h3>
+              </div>
+              <span class="quick-status"><i></i> Workspace ready</span>
+            </div>
+            <div class="quick-actions-grid">
+              <button class="quick-action quick-action-primary" data-quick-view="billingView"><span class="quick-action-icon">+</span><span><strong>New invoice</strong><small>GST or non-GST bill</small></span><b>↗</b></button>
+              <button class="quick-action" data-quick-view="productsView"><span class="quick-action-icon">▦</span><span><strong>Update stock</strong><small>Add products and quantities</small></span><b>↗</b></button>
+              <button class="quick-action" data-quick-view="customersView"><span class="quick-action-icon">◎</span><span><strong>Add customer</strong><small>GSTIN and place of supply</small></span><b>↗</b></button>
+              <button class="quick-action" data-quick-module="gst"><span class="quick-action-icon">%</span><span><strong>GST center</strong><small>Tax summaries and HSN</small></span><b>↗</b></button>
+              <button class="quick-action" data-quick-module="purchases"><span class="quick-action-icon">↓</span><span><strong>Purchase bill</strong><small>Supplier and input tax</small></span><b>↗</b></button>
+              <button class="quick-action" data-quick-module="payments"><span class="quick-action-icon">₹</span><span><strong>Record payment</strong><small>Collections and receipts</small></span><b>↗</b></button>
+            </div>
+          </section>
+
+          <div class="panel-grid two-col">
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Recent invoices</h3>
+              </div>
+              <div id="recentInvoices" class="list-block"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Low stock</h3>
+              </div>
+              <div id="lowStockList" class="list-block"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="productsView" class="view">
+          <div class="panel">
+            <div class="panel-header space-between">
+              <h3>Products</h3>
+              <button id="addProductButton" class="secondary-btn">Add product</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>SKU</th>
+                    <th>HSN</th>
+                    <th>Stock</th>
+                    <th>Rate</th>
+                    <th>GST</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="productsTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="customersView" class="view">
+          <div class="panel">
+            <div class="panel-header space-between">
+              <h3>Customers</h3>
+              <button id="addCustomerButton" class="secondary-btn">Add customer</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>GSTIN</th>
+                    <th>State</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="customersTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="billingView" class="view">
+          <div class="billing-grid">
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Step 1 · document setup</p>
+                  <h3>Invoice details</h3>
+                </div>
+              </div>
+              <div class="form-grid two">
+                <label>
+                  <span>Document type</span>
+                  <select id="documentTypeSelect">
+                    <option value="tax-invoice">Tax invoice</option>
+                    <option value="retail-invoice">Retail / non-GST bill</option>
+                    <option value="quotation">Quotation</option>
+                    <option value="proforma">Proforma invoice</option>
+                    <option value="delivery-challan">Delivery challan</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Customer</span>
+                  <select id="invoiceCustomerSelect"></select>
+                </label>
+                <label>
+                  <span>Customer GSTIN</span>
+                  <div class="input-with-action">
+                    <input id="customerGstinInput" type="text" placeholder="Auto-filled from customer" maxlength="15" />
+                    <button id="fetchGstinButton" type="button" class="inline-btn">Fetch</button>
+                  </div>
+                  <small id="gstinStatus" class="field-hint">Select a customer to load GSTIN.</small>
+                </label>
+                <label>
+                  <span>Invoice number</span>
+                  <input id="invoiceNumber" type="text" placeholder="INV-1001" />
+                </label>
+                <label>
+                  <span>Invoice date</span>
+                  <input id="invoiceDateInput" type="date" />
+                </label>
+                <label>
+                  <span>Due date</span>
+                  <input id="dueDateInput" type="date" />
+                </label>
+                <label>
+                  <span>Business state</span>
+                  <input id="businessStateInput" type="text" placeholder="Tamil Nadu" />
+                </label>
+                <label>
+                  <span>Place of supply</span>
+                  <input id="placeOfSupplyInput" type="text" placeholder="Customer state" />
+                </label>
+                <label>
+                  <span>Tax mode</span>
+                  <select id="taxModeSelect">
+                    <option value="exclusive">Tax exclusive</option>
+                    <option value="inclusive">Tax inclusive</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Supply treatment</span>
+                  <select id="supplyTreatmentSelect">
+                    <option value="regular">Regular taxable supply</option>
+                    <option value="zero-rated">Zero-rated / LUT</option>
+                    <option value="exempt">Exempt supply</option>
+                    <option value="nil-rated">Nil-rated supply</option>
+                  </select>
+                </label>
+                <label class="toggle-field">
+                  <span>Reverse charge</span>
+                  <input id="reverseChargeInput" type="checkbox" />
+                </label>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Step 2 · line items</p>
+                  <h3>Items and stock</h3>
+                </div>
+              </div>
+
+              <div class="item-controls">
+                <select id="selectedProduct"></select>
+                <input id="itemQty" type="number" min="1" value="1" step="0.01" placeholder="Qty" />
+                <button id="addItemButton" class="secondary-btn">Add item</button>
+              </div>
+              <div id="productPreview" class="product-preview"></div>
+
+              <div class="table-wrap compact">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>HSN/SAC</th>
+                      <th>Qty</th>
+                      <th>Rate</th>
+                      <th>GST</th>
+                      <th>Amount</th>
+                      <th>Remove</th>
+                    </tr>
+                  </thead>
+                  <tbody id="invoiceItemsBody"></tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+
+          <div class="billing-bottom-grid">
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Step 3 · adjustments</p>
+                  <h3>Charges and payment</h3>
+                </div>
+              </div>
+              <div class="form-grid two">
+                <label>
+                  <span>Discount (₹)</span>
+                  <input id="discountInput" type="number" min="0" step="0.01" value="0" />
+                </label>
+                <label>
+                  <span>Freight / other charges (₹)</span>
+                  <input id="freightInput" type="number" min="0" step="0.01" value="0" />
+                </label>
+                <label>
+                  <span>Round off (₹)</span>
+                  <input id="roundOffInput" type="number" step="0.01" value="0" />
+                </label>
+                <label>
+                  <span>Payment mode</span>
+                  <select id="paymentModeSelect">
+                    <option value="upi">UPI</option>
+                    <option value="cash">Cash</option>
+                    <option value="bank">Bank transfer</option>
+                    <option value="card">Card</option>
+                    <option value="credit">Credit</option>
+                  </select>
+                </label>
+              </div>
+              <label class="notes-field">
+                <span>Notes / terms</span>
+                <textarea id="invoiceNotesInput" rows="3" placeholder="Payment terms, delivery note or customer message"></textarea>
+              </label>
+            </section>
+
+            <section class="panel summary-panel">
+            <div class="summary-line">
+              <span>Subtotal</span>
+              <strong id="subtotalDisplay">₹ 0.00</strong>
+            </div>
+            <div class="summary-line">
+              <span>CGST</span>
+              <strong id="cgstDisplay">₹ 0.00</strong>
+            </div>
+            <div class="summary-line">
+              <span>SGST</span>
+              <strong id="sgstDisplay">₹ 0.00</strong>
+            </div>
+            <div class="summary-line">
+              <span>IGST</span>
+              <strong id="igstDisplay">₹ 0.00</strong>
+            </div>
+            <div class="summary-line total">
+              <span>Total</span>
+              <strong id="grandTotalDisplay">₹ 0.00</strong>
+            </div>
+            <div class="summary-line">
+              <span>Balance due</span>
+              <strong id="balanceDisplay">₹ 0.00</strong>
+            </div>
+            <div class="summary-line payment-row">
+              <label>
+                <span>Paid</span>
+                <input id="paidAmountInput" type="number" min="0" step="0.01" value="0" />
+              </label>
+            </div>
+            <button id="saveInvoiceButton" class="primary-btn full-width">Save invoice</button>
+            <button id="printInvoiceButton" type="button" class="secondary-btn full-width">Preview / print invoice</button>
+            </section>
+          </div>
+        </section>
+
+        <section id="reportsView" class="view">
+          <div class="panel-grid two-col">
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Sales register</h3>
+              </div>
+              <div id="salesRegisterList" class="list-block"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Stock status</h3>
+              </div>
+              <div id="stockStatusList" class="list-block"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="settingsView" class="view">
+          <div class="panel settings-panel">
+            <div class="panel-header">
+              <h3>Business settings</h3>
+            </div>
+            <div class="form-grid two">
+              <label>
+                <span>Business name</span>
+                <input id="businessNameInput" type="text" placeholder="SVDF GST" />
+              </label>
+              <label>
+                <span>Business phone</span>
+                <input id="businessPhoneInput" type="tel" placeholder="10-digit phone number" />
+              </label>
+              <label>
+                <span>Business email</span>
+                <input id="businessEmailInput" type="email" placeholder="billing@example.com" />
+              </label>
+              <label>
+                <span>GSTIN</span>
+                <input id="businessGstinInput" type="text" placeholder="33AAAAA0000A1Z5" />
+              </label>
+              <label>
+                <span>State</span>
+                <input id="businessStateInputSettings" type="text" placeholder="Tamil Nadu" />
+              </label>
+              <label>
+                <span>Invoice prefix</span>
+                <input id="invoicePrefixInput" type="text" placeholder="INV" />
+              </label>
+              <label>
+                <span>Sales coverage</span>
+                <input id="salesCoverageInput" type="text" value="All India" />
+              </label>
+              <label>
+                <span>Billing modes</span>
+                <input id="billingModesInput" type="text" value="GST and non-GST" readonly />
+              </label>
+              <label>
+                <span>UPI ID</span>
+                <input id="upiIdInput" type="text" placeholder="business@upi" />
+              </label>
+              <label>
+                <span>Invoice footer</span>
+                <input id="invoiceFooterInput" type="text" placeholder="Thank you for your business" />
+              </label>
+            </div>
+            <label class="notes-field">
+              <span>Business address</span>
+              <textarea id="businessAddressInput" rows="3" placeholder="Building, street, city, PIN code"></textarea>
+            </label>
+            <button id="saveSettingsButton" class="primary-btn">Save settings</button>
+          </div>
+        </section>
+
+        <section id="moduleView" class="view">
+          <div class="module-hero">
+            <p class="eyebrow">Workspace module</p>
+            <h3 id="moduleTitle">Payments & collections</h3>
+            <p id="moduleDescription"></p>
+          </div>
+          <div id="moduleCards" class="module-card-grid"></div>
+        </section>
+      </main>
+    </div>
+
+    <div id="modal" class="modal hidden">
+      <div class="modal-card">
+        <div class="panel-header space-between">
+          <h3 id="modalTitle">Add</h3>
+          <button id="closeModalButton" class="close-btn">×</button>
+        </div>
+
+        <form id="productForm" class="modal-form hidden">
+          <label>
+            <span>Name</span>
+            <input name="name" required />
+          </label>
+          <label>
+            <span>SKU</span>
+            <input name="sku" required />
+          </label>
+          <label>
+            <span>HSN</span>
+            <input name="hsnCode" required />
+          </label>
+          <label>
+            <span>Opening stock</span>
+            <input name="stockQty" type="number" min="0" step="0.01" value="0" required />
+          </label>
+          <label>
+            <span>Unit</span>
+            <select name="unit">
+              <option value="pcs">Pieces</option>
+              <option value="kg">Kilograms</option>
+              <option value="ltr">Litres</option>
+              <option value="box">Boxes</option>
+              <option value="service">Service</option>
+            </select>
+          </label>
+          <label>
+            <span>Purchase price</span>
+            <input name="purchasePrice" type="number" min="0" step="0.01" value="0" />
+          </label>
+          <label>
+            <span>Rate</span>
+            <input name="sellingPrice" type="number" min="0" step="0.01" required />
+          </label>
+          <label>
+            <span>MRP</span>
+            <input name="mrp" type="number" min="0" step="0.01" value="0" />
+          </label>
+          <label>
+            <span>Category</span>
+            <input name="category" placeholder="General" />
+          </label>
+          <label>
+            <span>GST %</span>
+            <input name="gstRate" type="number" min="0" max="28" step="0.01" value="18" required />
+          </label>
+          <label class="notes-field">
+            <span>Description</span>
+            <textarea name="description" rows="2" placeholder="Optional product description"></textarea>
+          </label>
+          <button class="primary-btn full-width" type="submit">Save product</button>
+        </form>
+
+        <form id="customerForm" class="modal-form hidden">
+          <label>
+            <span>Name</span>
+            <input name="name" required />
+          </label>
+          <label>
+            <span>Phone</span>
+            <input name="phone" />
+          </label>
+          <label>
+            <span>GSTIN</span>
+            <input name="gstin" />
+          </label>
+          <label>
+            <span>State</span>
+            <input name="state" required />
+          </label>
+          <button class="primary-btn full-width" type="submit">Save customer</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
